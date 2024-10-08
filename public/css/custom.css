@@ -1,0 +1,78 @@
+.card-img-top {
+    min-height: 350px;
+    object-fit: cover;
+}
+.in-stock {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #28a745;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+.card-body p {
+    font-size: 14px;
+    margin: 0;
+}
+.price {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+.vehicle-card {
+    position: relative;
+    padding: 15px;
+}
+.vehicle-card .card {
+    box-shadow:0px 0px 10px 5px #ddd;
+    transition: all 0.5s ease;
+}
+.vehicle-card .card:hover {
+    box-shadow:0px 0px 20px 10px #ccc;
+    transition: all 0.5s ease;
+}
+.vehicle-card .btn {
+    margin-right: 5px;
+}
+.button-section .card-batton-one {
+    border: 1px solid #2FC774;
+    background: #fff;
+    color: #2FC774;
+    font-weight: 500;
+}
+.button-section .card-batton-two {
+    border: 1px solid #2FC774;
+    background: #2FC774;
+    color: #ffffff;
+    font-weight: 500;
+}
+.button-section .card-batton-one:hover {
+    background: #2FC774;
+    color: #fff;
+    border: 1px solid #2FC774;
+}
+.button-section .card-batton-two:hover {
+    background: #fff;
+    color: #2FC774;
+    border: 1px solid #2FC774;
+}
+/* Image overlay setup */
+.image-container {
+    position: relative;
+    overflow: hidden;
+}
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgb(0 0 0 / 0%) 0%, rgb(0 0 0) 100%);
+    opacity: 0.6;
+    transition: opacity 0.5s ease; /* Smooth transition */
+}
+.vehicle-card .card:hover .image-overlay {
+    opacity: 0.2; /* Change opacity on hover to make overlay visible */
+}

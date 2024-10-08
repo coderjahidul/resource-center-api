@@ -63,6 +63,7 @@ register_deactivation_hook( __FILE__, 'deactivate_resource_center_api' );
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-resource-center-api.php';
+require plugin_dir_path( __FILE__ ) . '/templates/display-resource-center.php';
 
 /**
  * Begins execution of the plugin.

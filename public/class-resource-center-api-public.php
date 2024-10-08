@@ -98,6 +98,15 @@ class Resource_Center_Api_Public {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/resource-center-api-public.js', array( 'jquery' ), $this->version, false );
 
+		// include bootstrap js link
+		wp_enqueue_script( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', array( 'jquery' ), $this->version, false );
+
+		// include bootstrap css link
+		wp_enqueue_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css', array(), $this->version, 'all' );
+
+		// include custom css file
+		wp_enqueue_style( 'custom', plugin_dir_url( __FILE__ ) . 'css/custom.css', array(), $this->version, 'all' );
+
 	}
 
 }
