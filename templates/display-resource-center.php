@@ -62,7 +62,7 @@ function popular_search_products_function() {
     $popular_search_products = json_decode($response, true); // Decode as associative array
 
     ?>
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         <h2 class="mb-4">Popular Searches</h2>
         <div class="row">
 

@@ -66,6 +66,12 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-resource-center-api.php';
 require plugin_dir_path( __FILE__ ) . '/templates/display-resource-center.php';
 
 /**
+ * Load custom post type
+ * 
+ */
+require plugin_dir_path( __FILE__ ) . '/admin/custom-post-type.php';
+
+/**
  * Begins execution of the plugin.
  *
  * Since everything within the plugin is registered via hooks,
