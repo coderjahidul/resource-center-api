@@ -10,7 +10,7 @@ function create_popular_product_post_type() {
             'public' => true,
             'has_archive' => true,
             'menu_icon' => 'dashicons-car',
-            'supports' => array('title', 'editor', 'custom-fields'),
+            'supports' => array('title', 'editor', 'thumbnail'),
         )
     );
 }

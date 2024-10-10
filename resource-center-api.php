@@ -65,11 +65,20 @@ register_deactivation_hook( __FILE__, 'deactivate_resource_center_api' );
 require plugin_dir_path( __FILE__ ) . 'includes/class-resource-center-api.php';
 require plugin_dir_path( __FILE__ ) . '/templates/display-resource-center.php';
 
+require plugin_dir_path( __FILE__ ) . 'admin/fetch-api-products-import-to-db.php';
+require plugin_dir_path( __FILE__ ) . 'admin/import-popular-products-listing.php';
+
 /**
  * Load custom post type
  * 
  */
 require plugin_dir_path( __FILE__ ) . '/admin/custom-post-type.php';
+
+/**
+ * API Endpoints
+ */
+require plugin_dir_path( __FILE__ ) . '/admin/api_popular_products_endpoints.php';
+
 
 /**
  * Begins execution of the plugin.
