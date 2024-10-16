@@ -1,4 +1,8 @@
 <?php
+function popular_truncate_table( $table_name ) {
+    global $wpdb;
+    $wpdb->query( "TRUNCATE TABLE $table_name" );
+}
 function fatch_popular_search_products() {
 
     // Call for authorization API
@@ -62,6 +66,10 @@ function insert_products_import_array_in_db(){
 
     // Create Sync Popular Search Products Table
     $table_name = $wpdb->prefix . 'sync_popular_search_products';
+
+    // Truncate table
+    popular_truncate_table( $table_name );
+
     // Loop through each property and insert it into the database
     foreach ($popular_search_products['payLoad']['products'] as $product) {
         // Check if 'unique_id' exists in the property data
