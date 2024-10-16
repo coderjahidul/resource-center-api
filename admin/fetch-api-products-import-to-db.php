@@ -5,54 +5,97 @@ function popular_truncate_table( $table_name ) {
 }
 function fatch_popular_search_products() {
 
-    // Call for authorization API
+    // Step 1: Get Authorization Token
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://cev-qa-api.lle.ops.retisio.io/auth/api/v1/clients/token',
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => '',
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => 'POST',
-    CURLOPT_POSTFIELDS =>'{
-        "client_id":"retisiocevclient",
-        "client_secret":"gJODkQiwXiIwyJo01SYEyuJNcPHqv4t6qZeoBtdP2Vk=",
-        "grant_type": "client_credentials"
-    }',
-    CURLOPT_HTTPHEADER => array(
-        'Content-Type: application/json'
-    ),
+        CURLOPT_URL => 'https://cev-api.prd.ops.retisio.io/auth/api/v1/clients/token',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>'{
+            "client_id":"retisiocevclient",
+            "client_secret":"7+ZF30hNjyFiSme2P3I04HIDNWiO68QLDKLK8ibFvXs=",
+            "grant_type": "client_credentials"
+        }',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
     ));
 
     $response = curl_exec($curl);
-
     curl_close($curl);
-    $authorization = 'Bearer ' . json_decode($response)->access_token;
 
-    // Call for popular search products API
+    $auth_response = json_decode($response);
+    if (!isset($auth_response->access_token)) {
+        die('Error: Failed to retrieve access token');
+    }
+
+    $authorization = 'Bearer ' . $auth_response->access_token;
+
+    // Step 2: Call API to get product IDs
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://cev-qa-api.lle.ops.retisio.io/catalog-search/api/v3/products?tinyProduct=false&productIds=10207+19000+100527+100133+100000+100325',
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => '',
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => 'GET',
-    CURLOPT_HTTPHEADER => array(
-        'x-chnl-id: CEV_CHANNEL',
-        'Authorization: ' . $authorization
-    ),
+        CURLOPT_URL => 'https://cev-qa-api.lle.ops.retisio.io/content/api/v1/content-items/productCarousel:default:77ce304a-6952-444b-8fa8-dd6d6638ee18/live',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'x-chnl-id: CEV_CHANNEL',
+            'Authorization: ' . $authorization // Use dynamic token here
+        ),
     ));
 
     $response = curl_exec($curl);
-
     curl_close($curl);
+
+    // Decode the response
+    $product_data = json_decode($response, true);
+
+    if (!isset($product_data['configValue'])) {
+        die('Error: configValue not found in the response');
+    }
+
+    // Extract product IDs from configValue
+    $config_value = json_decode($product_data['configValue'], true); // Decode configValue as it's a JSON string
+    if (!isset($config_value['defaultProductSelector']['products'])) {
+        die('Error: Product IDs not found in configValue');
+    }
+
+    $product_ids = array_column($config_value['defaultProductSelector']['products'], 'productId');
+
+    // Step 3: Call for popular search products API with '+' as delimiter for product IDs
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://cev-qa-api.lle.ops.retisio.io/catalog-search/api/v3/products?tinyProduct=false&productIds=' . implode('+', $product_ids), // Use '+' as delimiter
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'x-chnl-id: CEV_CHANNEL',
+            'Authorization: ' . $authorization // Ensure $authorization is defined properly
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+
+    // Step 4: Return the response of popular products
+    // print_r($response);
     return $response;
 }
 
