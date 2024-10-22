@@ -5,11 +5,22 @@ function popular_truncate_table( $table_name ) {
 }
 function fatch_popular_search_products() {
 
+    // Get the API key from the options
+    $resource_api_url = get_option('resource_api_url');
+    $resource_api_client_id = get_option('resource_api_client_id');
+    $resource_api_key = get_option('resource_api_key');
+
+    // Check if the API key exists
+    // if (empty($resource_api_key)) {
+    //     echo json_encode(array('error' => 'Shipgate API key is missing.'));
+    //     wp_die();
+    // }
+
     // Step 1: Get Authorization Token
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://cev-api.prd.ops.retisio.io/auth/api/v1/clients/token',
+        CURLOPT_URL => '' . $resource_api_url . '/auth/api/v1/clients/token',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -18,8 +29,8 @@ function fatch_popular_search_products() {
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS =>'{
-            "client_id":"retisiocevclient",
-            "client_secret":"7+ZF30hNjyFiSme2P3I04HIDNWiO68QLDKLK8ibFvXs=",
+            "client_id":"' . $resource_api_client_id . '",
+            "client_secret":"' . $resource_api_key . '",
             "grant_type": "client_credentials"
         }',
         CURLOPT_HTTPHEADER => array(
@@ -41,7 +52,7 @@ function fatch_popular_search_products() {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://cev-qa-api.lle.ops.retisio.io/content/api/v1/content-items/productCarousel:default:77ce304a-6952-444b-8fa8-dd6d6638ee18/live',
+        CURLOPT_URL => '' . $resource_api_url . '/content/api/v1/content-items/productCarousel:default:77ce304a-6952-444b-8fa8-dd6d6638ee18/live',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -77,7 +88,7 @@ function fatch_popular_search_products() {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://cev-qa-api.lle.ops.retisio.io/catalog-search/api/v3/products?tinyProduct=false&productIds=' . implode('+', $product_ids), // Use '+' as delimiter
+        CURLOPT_URL => '' . $resource_api_url . '/catalog-search/api/v3/products?tinyProduct=false&productIds=' . implode('+', $product_ids), // Use '+' as delimiter
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
